@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Home, Contact, Login, Register, Reset, Admin } from "./pages";
+import { Header, Footer } from "./components";
+import AdminOnly from "./components/adminOnlyRoute/AdminOnly";
+import ProductDetails from "./components/product/productDetails/ProductDetails";
+import Cart from "./pages/cart/Cart";
+import CheckoutDetails from "./pages/checkout/CheckoutDetails";
+import Checkout from "./pages/checkout/Checkout";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/reset" element={<Reset />} />
+          <Route
+            path="/admin/*"
+            element={
+              <AdminOnly>
+                <Admin />
+              </AdminOnly>
+            }
+          />
+          <Route path="/product-details/:id" element={<ProductDetails />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout-details" element={<CheckoutDetails />} />
+          <Route path="/checkout" element={<Checkout />} />
+        </Routes>
+        <Footer />
+      </Router>
+      <ToastContainer />
+    </>
   );
 }
-
 export default App;
