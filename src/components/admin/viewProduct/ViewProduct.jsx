@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db, storage } from "../../../firebase/Config";
 import { toast } from "react-toastify";
@@ -14,12 +14,23 @@ import {
   STORE_PRODUCTS,
 } from "../../../redux/features/productSlice";
 import useFetchCollection from "../../../customHooks/useFetchCollection";
+import {
+  FILTER_BY_SEARCH,
+  selectFilteredProducts,
+} from "../../../redux/features/filterSlice";
+import Search from "../../search/Search";
+import Pagination from "../../pagination/Pagination";
 
 const ViewProduct = () => {
+  const [search, setSearch] = useState("");
   const { data, isLoading } = useFetchCollection("product");
   const products = useSelector(selectProducts);
+  const filteredProducts = useSelector(selectFilteredProducts);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(FILTER_BY_SEARCH({ search, products }));
+  }, [dispatch, products, search]);
   useEffect(() => {
     dispatch(
       STORE_PRODUCTS({
@@ -27,6 +38,19 @@ const ViewProduct = () => {
       })
     );
   }, [dispatch, data]);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  // eslint-disable-next-line no-unused-vars
+  const [productPerPage, setProductPerPage] = useState(6);
+
+  // Get current Product
+  const indexOfLastProduct = currentPage * productPerPage;
+  const indexofFirstProduct = indexOfLastProduct - productPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexofFirstProduct,
+    indexOfLastProduct
+  );
 
   // useEffect(() => {
   //   getProducts();
@@ -103,7 +127,13 @@ const ViewProduct = () => {
       {isLoading && <Loader />}
       <div className={styles.table}>
         <h2>All Product</h2>
-        {products.length === 0 ? (
+        <div className={styles.search}>
+          <p>
+            <b>{filteredProducts.length}</b> products found
+          </p>
+          <Search value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        {filteredProducts.length === 0 ? (
           <p>No Product found</p>
         ) : (
           <table>
@@ -118,7 +148,7 @@ const ViewProduct = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product, index) => {
+              {currentProducts.map((product, index) => {
                 const { id, name, price, imageURL, category } = product;
                 return (
                   <tr key={id}>
@@ -155,6 +185,12 @@ const ViewProduct = () => {
             </tbody>
           </table>
         )}
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          productPerPage={productPerPage}
+          totalProducts={filteredProducts.length}
+        />
       </div>
     </>
   );

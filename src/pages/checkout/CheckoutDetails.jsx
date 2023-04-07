@@ -7,8 +7,6 @@ import CheckoutSummary from "../../components/checkoutSummary/CheckoutSummary";
 import {
   SAVE_BILLING_ADDRESS,
   SAVE_SHIPPING_ADDRESS,
-  //   selectBillingAddress,
-  //   selectShippingAddress,
 } from "../../redux/features/checkSlice";
 import styles from "./CheckoutDetails.module.scss";
 const initialAddressState = {
@@ -141,7 +139,7 @@ const CheckoutDetails = () => {
             </Card>
             {/* Billing Address */}
             <Card cardClass={styles.card}>
-              <h3>Billing Address</h3>
+              {/* <h3>Billing Address</h3>
               <label>Name</label>
               <input
                 type="text"
@@ -195,7 +193,7 @@ const CheckoutDetails = () => {
                 value={billingAddress.postal_code}
                 onChange={(e) => handleBilling(e)}
               />
-              {/* Country input */}
+              Country input
               <CountryDropdown
                 className={styles.select}
                 valueType="short"
@@ -218,7 +216,7 @@ const CheckoutDetails = () => {
                 name="phone"
                 value={billingAddress.phone}
                 onChange={(e) => handleBilling(e)}
-              />
+              />  */}
               <button type="submit" className="--btn --btn-primary">
                 Proceed To Checkout
               </button>

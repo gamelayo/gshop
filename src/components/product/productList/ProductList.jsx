@@ -53,7 +53,7 @@ const ProductList = ({ products }) => {
             <b>{filteredProducts.length}</b> Product found
           </p>
         </div>
-
+        {/* Search Icon */}
         <div>
           <Search value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
